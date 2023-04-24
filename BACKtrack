@@ -1,0 +1,185 @@
+0/1 KANP using DP
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to find the maximum profit
+int knapSack(int W, int wt[], int val[], int n)
+{
+	// Making and initializing dp array
+	int dp[W + 1];
+	memset(dp, 0, sizeof(dp));
+
+	for (int i = 1; i < n + 1; i++) {
+		for (int w = W; w >= 0; w--) {
+
+			if (wt[i - 1] <= w)
+				
+				// Finding the maximum value
+				dp[w] = max(dp[w],
+							dp[w - wt[i - 1]] + val[i - 1]);
+		}
+	}
+	// Returning the maximum value of knapsack
+	return dp[W];
+}
+
+// Driver code
+int main()
+{
+	int profit[] = { 60, 100, 120 };
+	int weight[] = { 10, 20, 30 };
+	int W = 50;
+	int n = sizeof(profit) / sizeof(profit[0]);
+	cout << knapSack(W, weight, profit, n);
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+GRAPH COLORING
+bool isSafe(int k, int c) {
+    for (int i = 0; i < n; i++) {
+        if (G[k][i] == 1 && c == x[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void graphColour(int k) {
+    for (int c = 1; c <= m; c++) {
+        if (isSafe(k, c)) {
+            X[k] = c;
+            if ((k + 1) < n) {
+                graphColour(k + 1);
+            } else {
+                for (int i = 0; i < n; i++) {
+                    cout << X[i] << " ";
+                }
+                cout << endl;
+                return;
+            }
+        }
+    }
+}
+int main() {
+    cout << "Enter the number of vertices: ";
+    cin >> n;
+
+    cout << "Enter the adjacency matrix: " << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> G[i][j];
+        }
+    }
+
+    cout << "Enter the number of colors: ";
+    cin >> m;
+
+    cout << "Possible colorings: " << endl;
+    graphColour(0);
+    return 0;
+}
+
+
+
+
+
+
+
+
+N QUEEN
+#include <iostream>
+#include <cmath>
+#include <bits/stdc++.h>
+using namespace std;
+
+void printArray(int a[], int n) {
+    for (int i = 0; i < n; i++) {
+        cout << a[i] << " ";
+    }
+}
+
+int isSafe(int result[], int x2, int y2) {
+    for (int i = 0; i < x2; i++) {
+        if ((result[i] == y2) || (abs(i - x2) == abs(result[i] - y2))) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void placeQueens(int result[], int x, int size) {
+    for (int i = 0; i < size; i++) {
+        if (isSafe(result, x, i) == 1) {
+            result[x] = i;
+            if (x == size - 1) {
+                cout << "\nSolution found.\n";
+                printArray(result, size);
+            }
+            placeQueens(result, x + 1, size);
+        }
+    }
+}
+
+int main() {
+    int n;
+    cout << "In Number of queens: ";
+    cin >> n;
+    int result[n];
+    placeQueens(result, 0, n);
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+Subset Sum
+#include <iostream>
+using namespace std;
+
+void displaySubset(int subSet[], int size) {
+   for(int i = 0; i < size; i++) {
+      cout << subSet[i] << "  ";
+   }
+   cout << endl;
+}
+
+void subsetSum(int set[], int subSet[], int n, int subSize, int total, int nodeCount ,int sum) {
+   if( total == sum) {
+      displaySubset(subSet, subSize);     //print the subset
+      subsetSum(set,subSet,n,subSize-1,total-set[nodeCount],nodeCount+1,sum);     //for other subsets
+      return;
+   }else {
+      for( int i = nodeCount; i < n; i++ ) {     //find node along breadth
+         subSet[subSize] = set[i];
+         subsetSum(set,subSet,n,subSize+1,total+set[i],i+1,sum);     //do for next node in depth
+      }
+   }
+}
+
+void findSubset(int set[], int size, int sum) {
+   int *subSet = new int[size];     //create subset array to pass parameter of subsetSum
+   subsetSum(set, subSet, size, 0, 0, 0, sum);
+   delete[] subSet;
+}
+
+int main() {
+   int weights[] = {15, 22, 14, 26, 32, 9, 16, 8};
+   int size = 8;
+   findSubset(weights, size, 53);
+}
+
