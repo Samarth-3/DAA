@@ -1,0 +1,197 @@
+#include <iostream>
+using namespace std;
+
+const int MAXN = 100;
+int n, m;
+int G[MAXN][MAXN];
+int X[MAXN];
+
+bool isSafe(int k, int c) {
+    for (int i = 0; i < n; i++) {
+        if (G[k][i] == 1 && c == X[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void graphColour(int k) {
+    for (int c = 1; c <= m; c++) {
+        if (isSafe(k, c)) {
+            X[k] = c;
+            if ((k + 1) < n) {
+                graphColour(k + 1);
+            } else {
+                for (int i = 0; i < n; i++) {
+                    cout << X[i] << " ";
+                }
+                cout << endl;
+                return;
+            }
+        }
+    }
+}
+
+int main() {
+    cout << "Enter the number of vertices: ";
+    cin >> n;
+
+    cout << "Enter the adjacency matrix: " << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> G[i][j];
+        }
+    }
+
+    cout << "Enter the number of colors: ";
+    cin >> m;
+
+    cout << "Possible colorings: " << endl;
+    graphColour(0);
+    return 0;
+}
+
+
+
+//=====================================
+
+#include <iostream>
+#include <cmath>
+// #include <bits/stdc++.h>
+using namespace std;
+
+void printArray(int a[], int n) {
+    for (int i = 0; i < n; i++) {
+        cout << a[i] << " ";
+    }
+}
+
+int isSafe(int result[], int x2, int y2) {
+    for (int i = 0; i < x2; i++) {
+        if ((result[i] == y2) || (abs(i - x2) == abs(result[i] - y2))) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void placeQueens(int result[], int x, int size) {
+    for (int i = 0; i < size; i++) {
+        if (isSafe(result, x, i) == 1) {
+            result[x] = i;
+            if (x == size - 1) {
+                cout << "\nSolution found.\n";
+                printArray(result, size);
+            }
+            placeQueens(result, x + 1, size);
+        }
+    }
+}
+
+int main() {
+    int n;
+    cout << "In Number of queens: ";
+    cin >> n;
+    int result[n];
+    placeQueens(result, 0, n);
+    return 0;
+}
+
+
+//=====================================
+
+
+
+
+#include <iostream>
+using namespace std;
+
+const int MAXN = 100;   // maximum number of items
+const int MAXW = 1000;  // maximum weight of the knapsack
+
+int N;                 // number of items
+int W;                 // weight of the knapsack
+int w[MAXN+1];         // weight of each item
+int v[MAXN+1];         // value of each item
+int best_value = 0;    // best value found so far
+int curr_value = 0;    // current value being explored
+int curr_weight = 0;   // current weight being explored
+
+void backtrack(int i) {
+    if (i == N) {
+        // reached end of the list, check if we found a better solution
+        if (curr_value > best_value) {
+            best_value = curr_value;
+        }
+        return;
+    }
+    // explore including the ith item
+    if (curr_weight + w[i] <= W) {
+        curr_weight += w[i];
+        curr_value += v[i];
+        backtrack(i+1);
+        curr_weight -= w[i];
+        curr_value -= v[i];
+    }
+    // explore excluding the ith item
+    backtrack(i+1);
+}
+
+int main() {
+    // read input
+    cout << "Enter the number of items: ";
+    cin >> N;
+    cout << "Enter the weight of the knapsack: ";
+    cin >> W;
+    cout << "Enter the weight and value of each item: " << endl;
+    for (int i = 0; i < N; i++) {
+        cin >> w[i] >> v[i];
+    }
+    // solve the problem using backtracking
+    backtrack(0);
+    // output the result
+    cout << "The maximum value of the knapsack is: " << best_value << endl;
+    return 0;
+}
+
+
+
+//=====================================
+
+
+
+
+#include <iostream>
+using namespace std;
+
+void displaySubset(int subSet[], int size) {
+   for(int i = 0; i < size; i++) {
+      cout << subSet[i] << "  ";
+   }
+   cout << endl;
+}
+
+void subsetSum(int set[], int subSet[], int n, int subSize, int total, int nodeCount ,int sum) {
+   if( total == sum) {
+      displaySubset(subSet, subSize);     //print the subset
+      subsetSum(set,subSet,n,subSize-1,total-set[nodeCount],nodeCount+1,sum);     //for other subsets
+      return;
+   }else {
+      for( int i = nodeCount; i < n; i++ ) {     //find node along breadth
+         subSet[subSize] = set[i];
+         subsetSum(set,subSet,n,subSize+1,total+set[i],i+1,sum);     //do for next node in depth
+      }
+   }
+}
+
+void findSubset(int set[], int size, int sum) {
+   int *subSet = new int[size];     //create subset array to pass parameter of subsetSum
+   subsetSum(set, subSet, size, 0, 0, 0, sum);
+   delete[] subSet;
+}
+
+int main() {
+   int weights[] = {15, 22, 14, 26, 32, 9, 16, 8};
+   int size = 8;
+   findSubset(weights, size, 53);
+}
